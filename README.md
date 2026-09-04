@@ -38,6 +38,7 @@ brick red, bone white — so the site and the truck decals/business cards read a
 - Google reviews (5.0 ★) surfaced on all five pages
 
 **Content & clarity**
+- Copy rewritten in a consistent professional register (see *Voice and tone* below)
 - Service area explained rather than restricted: mowing runs on a weekly route through Delaware and
   Randolph counties (which is *why* the schedule holds), while landscaping, cleanups and project work
   travel across East Central Indiana
@@ -82,12 +83,22 @@ Everything is plain HTML — open a file, change the words, save.
   (`lawn`, `landscaping`, or `cleanup`)
 - **Nav links:** the header and footer are repeated in each of the five files — change all five
 
-## A note on tone
+## Voice and tone
 
-The copy deliberately does not overstate the size of the business. The gallery is described as
-*41 photos*, not 41 properties or 41 customers; the review section says *three* Google reviews on its
-face. A new local business wins on being obviously honest — inflated numbers are the fastest way to
-lose that.
+The copy is written to read as a professional trade business. If you edit or add to it, keep to
+these rules so the site stays consistent:
+
+- **Professional register throughout.** Complete sentences, specific nouns, no slang, no filler
+  intensifiers ("really", "super"), no exclamation points, no rhetorical questions in body copy.
+- **"We" is the business; "I" is Logan.** Business capability, process, and standards are stated as
+  *we*. First person singular is used only on the About page, where it is clearly Logan speaking.
+- **Consistent terminology.** The offer is an *estimate*, everywhere — not a mix of quote, estimate,
+  and free look. Services are named the same way in the nav, the cards, and the footer.
+- **State capability, not enthusiasm.** "We assess every property in person before quoting" reads as
+  a commitment; "we'll give you a straight number" reads as a boast. Prefer the former.
+- **Don't overstate the size of the business.** The gallery is described as *41 photos*, not 41
+  properties or 41 customers; the review section says *three* Google reviews on its face. Obvious
+  honesty is an asset for a new local business — inflated numbers are the fastest way to lose it.
 
 ## Recommended next steps
 
@@ -101,6 +112,28 @@ lose that.
 4. **Add real before/after pairs.** The gallery photos came from the old site with no pairing
    information. Shooting matched before/after sets is the most persuasive content this business can make.
 5. **Post prices or starting rates** if Logan is comfortable — it filters out bad-fit leads.
+
+## Link previews
+
+`assets/img/og.jpg` is the 1200x630 card shown when the URL is pasted into a text, a Facebook post,
+or a Slack message. It is the hero photograph with the badge logo composited over it, so a shared
+link reads as the business rather than as an anonymous lawn. Every page points at it via `og:image`
+and `twitter:image`.
+
+Rebuild it after changing the hero photo (edit `PHOTO` at the top of the script first):
+
+```bash
+python3 tools/make-og-image.py
+```
+
+Facebook and LinkedIn cache these aggressively — after replacing it, run the URL through
+[Facebook's Sharing Debugger](https://developers.facebook.com/tools/debug/) and hit *Scrape Again*.
+
+## Photo selection
+
+The Home and Services pages use residential photographs only. Commercial and large-lot work stays in
+the gallery, where it belongs — the pages a prospective homeowner lands on should show properties
+that look like theirs.
 
 ## Customer privacy — image metadata
 

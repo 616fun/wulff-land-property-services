@@ -154,7 +154,7 @@
         window.location.href = 'mailto:Wulfflandservices@gmail.com'
           + '?subject=' + encodeURIComponent('Quote request — ' + (data.name || 'Website'))
           + '&body=' + encodeURIComponent(body);
-        if (note) note.textContent = 'Opening your email app with the details filled in…';
+        if (note) note.textContent = 'Opening your email application with the details filled in…';
         return;
       }
 
@@ -164,12 +164,12 @@
       }).then(function (r) {
         if (!r.ok) throw new Error('bad response');
         form.innerHTML = '<div style="text-align:center;padding:40px 0">'
-          + '<h3 style="margin-bottom:12px">Request sent.</h3>'
-          + '<p class="muted">Thanks — we\'ll be in touch shortly. '
-          + 'Need us sooner? Call <a href="tel:+17653935386" style="color:var(--steel-lt)">(765) 393-5386</a>.</p></div>';
+          + '<h3 style="margin-bottom:12px">Request received.</h3>'
+          + '<p class="muted">Thank you — we\'ll be in touch shortly, typically the same day. '
+          + 'For anything urgent, call <a href="tel:+17653935386" style="color:var(--steel-lt)">(765) 393-5386</a>.</p></div>';
       }).catch(function () {
         btn.disabled = false; btn.textContent = 'Send my request';
-        if (note) note.innerHTML = 'Something went wrong. Please call or text '
+        if (note) note.innerHTML = 'The request could not be sent. Please call or text '
           + '<a href="tel:+17653935386" style="color:var(--steel-lt)">(765) 393-5386</a>.';
       });
     });
