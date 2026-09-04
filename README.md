@@ -94,6 +94,23 @@ Everything is plain HTML — open a file, change the words, save.
    information. Shooting matched before/after sets is the most persuasive content this business can make.
 5. **Post prices or starting rates** if Logan is comfortable — it filters out bad-fit leads.
 
+## Customer privacy — image metadata
+
+Phone photos embed GPS coordinates in EXIF. Publishing those would expose the exact
+addresses of the customers whose properties are shown. **Every image in `assets/img/` has had all
+EXIF, GPS, XMP and IPTC metadata stripped** (only the JFIF header and the ICC colour profile are kept,
+so colours are unaffected and the pixel data is untouched).
+
+After adding any new photo, run:
+
+```bash
+python3 tools/strip-metadata.py
+```
+
+It scrubs everything under `assets/img/` and then verifies that no `Exif`, `GPS`, XMP or IPTC markers
+remain — it exits non-zero if any do. Captions in the gallery are deliberately generic
+(service type only, no street names or addresses) for the same reason.
+
 ## Photo credit
 
 All photography is the business's own, pulled from the original Google Sites pages and Facebook page.
