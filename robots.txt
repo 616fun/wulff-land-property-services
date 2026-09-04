@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://616fun.github.io/wulff-land-property-services/sitemap.xml
