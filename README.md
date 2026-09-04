@@ -16,7 +16,7 @@ and one JS file. It can be hosted anywhere (GitHub Pages, Netlify, or a normal w
 |---|---|
 | `index.html` | Home — hero, services, Google reviews, owner intro, work preview, service area |
 | `services.html` | The five services in detail + how the process works |
-| `work.html` | Filterable photo gallery (41 photos) with a keyboard-accessible lightbox |
+| `work.html` | Filterable gallery of 41 job photos with a keyboard-accessible lightbox |
 | `about.html` | Logan's story, approach, and the four values |
 | `contact.html` | Quote form + every way to reach the business |
 
@@ -38,8 +38,9 @@ brick red, bone white — so the site and the truck decals/business cards read a
 - Google reviews (5.0 ★) surfaced on all five pages
 
 **Content & clarity**
-- Service-area rules stated plainly: lawn care is Delaware + Randolph counties; landscaping and
-  cleanups extend across East Central Indiana
+- Service area explained rather than restricted: mowing runs on a weekly route through Delaware and
+  Randolph counties (which is *why* the schedule holds), while landscaping, cleanups and project work
+  travel across East Central Indiana
 - Every service gets a photo, a plain-English description, and a scannable list of what's included
 
 **Findability (SEO)**
@@ -80,6 +81,13 @@ Everything is plain HTML — open a file, change the words, save.
   then copy an existing `<figure class="shot">` in `work.html` and change the filenames and `data-cat`
   (`lawn`, `landscaping`, or `cleanup`)
 - **Nav links:** the header and footer are repeated in each of the five files — change all five
+
+## A note on tone
+
+The copy deliberately does not overstate the size of the business. The gallery is described as
+*41 photos*, not 41 properties or 41 customers; the review section says *three* Google reviews on its
+face. A new local business wins on being obviously honest — inflated numbers are the fastest way to
+lose that.
 
 ## Recommended next steps
 

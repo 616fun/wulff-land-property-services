@@ -146,16 +146,16 @@ p:last-child{margin-bottom:0}
 }
 .header__inner{
   display:flex;align-items:center;gap:24px;
-  height:84px;
+  height:92px;
 }
-.header.is-stuck .header__inner{height:72px}
+.header.is-stuck .header__inner{height:76px}
 .header__inner{transition:height .3s var(--ease)}
 
 .brand{display:flex;align-items:center;gap:13px;text-decoration:none;flex:none;margin-right:auto}
-.brand img{width:46px;height:46px;border-radius:50%;flex:none;transition:width .3s var(--ease),height .3s var(--ease)}
-.header.is-stuck .brand img{width:40px;height:40px}
+.brand img{width:58px;height:58px;flex:none;transition:width .3s var(--ease),height .3s var(--ease);filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}
+.header.is-stuck .brand img{width:48px;height:48px}
 .brand__txt{display:flex;flex-direction:column;line-height:1}
-.brand__name{font-family:var(--display);font-weight:700;font-style:italic;font-size:22px;letter-spacing:.01em;text-transform:uppercase}
+.brand__name{font-family:var(--display);font-weight:700;font-style:italic;font-size:24px;letter-spacing:.01em;text-transform:uppercase}
 .brand__sub{font-size:9.5px;font-weight:600;letter-spacing:.19em;text-transform:uppercase;color:var(--steel-lt);margin-top:4px}
 
 .nav{display:flex;align-items:center;gap:4px}
@@ -591,4 +591,53 @@ p:last-child{margin-bottom:0}
   .header__phone span,.header__phone{font-size:0}
   .header__phone svg{width:20px;height:20px;color:#fff}
   .header__phone{width:44px;height:44px;justify-content:center;border:1px solid var(--line);border-radius:4px}
+}
+
+
+/* ==========================================================================
+   Brand mark — the badge earns real estate on every page
+   ========================================================================== */
+
+/* hero: headline left, badge right (stacks above the copy on phones) */
+.hero__grid{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;
+  gap:clamp(28px,5vw,72px);align-items:center;
+}
+.hero__badge img{
+  width:clamp(190px,20vw,310px);height:auto;
+  filter:drop-shadow(0 22px 46px rgba(0,0,0,.7));
+}
+
+/* interior pages: badge sits above the eyebrow */
+.phero__badge{
+  width:clamp(84px,10vw,128px);height:auto;margin-bottom:22px;
+  filter:drop-shadow(0 14px 30px rgba(0,0,0,.6));
+}
+
+/* footer: full lockup, larger */
+.brand--lg img{width:92px;height:92px}
+.brand--lg .brand__name{font-size:34px}
+.brand--lg .brand__sub{font-size:11px;letter-spacing:.21em}
+.brand--lg{gap:18px}
+
+@media (max-width:900px){
+  .hero__grid{grid-template-columns:1fr;gap:26px}
+  .hero__badge{order:-1;justify-self:start}
+  .hero__badge img{width:clamp(140px,36vw,200px)}
+  .brand--lg img{width:74px;height:74px}
+  .brand--lg .brand__name{font-size:28px}
+}
+@media (max-width:620px){
+  .brand img{width:50px;height:50px}
+  .header.is-stuck .brand img{width:44px;height:44px}
+  .header__inner{height:80px}
+  .header.is-stuck .header__inner{height:70px}
+}
+
+/* soft vignette so the badge reads cleanly over any hero photo */
+.hero__badge{position:relative;display:grid;place-items:center;isolation:isolate}
+.hero__badge::before{
+  content:"";position:absolute;z-index:-1;
+  width:132%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(10,13,18,.78) 0%,rgba(10,13,18,.5) 46%,rgba(10,13,18,0) 71%);
 }
