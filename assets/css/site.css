@@ -563,3 +563,32 @@ p:last-child{margin-bottom:0}
   .contact-row.is-email b{font-size:14.5px}
   .contact-row{gap:14px;padding:18px}
 }
+
+/* drawer CTAs must never overflow a narrow phone */
+.drawer__foot .btn{
+  white-space:normal;font-size:13.5px;letter-spacing:.06em;
+  padding-inline:16px;min-width:0;text-align:center;
+}
+.drawer__foot .btn svg{flex:none}
+
+/* long button labels must wrap rather than spill past the viewport */
+@media (max-width:480px){
+  .btn{white-space:normal;font-size:13px;letter-spacing:.06em;padding:15px 20px;text-align:center}
+  .btn--lg{padding:17px 22px;font-size:13.5px}
+  .callbar .btn{padding:15px 8px}
+}
+
+/* tighten the header where nav + phone + CTA would otherwise crowd (small laptops/tablets) */
+@media (min-width:901px) and (max-width:1150px){
+  .nav a{padding:10px 9px;font-size:12.5px;letter-spacing:.07em}
+  .nav a::after{left:9px;right:9px}
+  .header__phone{font-size:18px}
+  .header__cta{gap:10px}
+  .header__cta > .btn{padding:14px 16px;font-size:12.5px;letter-spacing:.07em}
+  .header__inner{gap:14px}
+}
+@media (min-width:901px) and (max-width:1010px){
+  .header__phone span,.header__phone{font-size:0}
+  .header__phone svg{width:20px;height:20px;color:#fff}
+  .header__phone{width:44px;height:44px;justify-content:center;border:1px solid var(--line);border-radius:4px}
+}
