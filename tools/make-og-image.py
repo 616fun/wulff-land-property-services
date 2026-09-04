@@ -13,12 +13,13 @@ resize/crop/JPEG steps. Run tools/strip-metadata.py afterwards.
 import math, os, struct, subprocess, sys, tempfile, zlib
 
 ROOT   = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir)
-PHOTO  = os.path.join(ROOT, 'assets', 'img', 'full', 'img40.jpg')
+PHOTO  = os.path.join(ROOT, 'assets', 'img', 'full', 'img44.jpg')
 LOGO   = os.path.join(ROOT, 'assets', 'img', 'logo.png')
 OUT    = os.path.join(ROOT, 'assets', 'img', 'og.jpg')
 W, H   = 1200, 630
 BADGE  = 400                     # rendered logo width, px
 CX, CY = W // 2, 312             # badge centre
+CROP_Y = 0.50                    # 0 = crop from the top, 1 = from the bottom
 INK    = (10, 13, 18)
 
 
@@ -117,17 +118,28 @@ def vignette_alpha(dist, radius):
 
 def main():
     tmp = tempfile.mkdtemp()
-    base_png = os.path.join(tmp, 'crop.png')
-    subprocess.run(['sips', '-z', '900', '1200', PHOTO, '-s', 'format', 'png',
-                    '--out', os.path.join(tmp, 'fit.png')], check=True, capture_output=True)
-    subprocess.run(['sips', '--cropToHeightWidth', str(H), str(W),
-                    os.path.join(tmp, 'fit.png'), '--out', base_png], check=True, capture_output=True)
 
-    bw, bh, bch, bg = read_png(base_png)
-    if (bw, bh) != (W, H):
-        raise SystemExit(f'unexpected base size {bw}x{bh}')
+    # scale the source so it covers 1200x630 without distortion, whatever its
+    # aspect ratio, then crop the band we want ourselves
+    probe = subprocess.run(['sips', '-g', 'pixelWidth', '-g', 'pixelHeight', PHOTO],
+                           check=True, capture_output=True, text=True).stdout
+    sw = int(probe.split('pixelWidth:')[1].split()[0])
+    sh = int(probe.split('pixelHeight:')[1].split()[0])
+    scale = max(W / sw, H / sh)
+    nw, nh = math.ceil(sw * scale), math.ceil(sh * scale)
+    fit = os.path.join(tmp, 'fit.png')
+    subprocess.run(['sips', '-z', str(nh), str(nw), PHOTO, '-s', 'format', 'png',
+                    '--out', fit], check=True, capture_output=True)
+
+    fw, fh, bch, src = read_png(fit)
     if bch == 4:                                   # drop any alpha
-        bg = bytearray(b for i, b in enumerate(bg) if i % 4 != 3); bch = 3
+        src = bytearray(b for i, b in enumerate(src) if i % 4 != 3); bch = 3
+    x0 = max(0, (fw - W) // 2)
+    y0 = max(0, min(fh - H, int((fh - H) * CROP_Y)))
+    bg = bytearray(W * H * 3)
+    for y in range(H):
+        so = ((y + y0) * fw + x0) * 3
+        bg[y * W * 3:(y + 1) * W * 3] = src[so:so + W * 3]
 
     lw, lh, lch, logo = read_png(LOGO)
     if lch != 4:

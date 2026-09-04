@@ -120,7 +120,9 @@ or a Slack message. It is the hero photograph with the badge logo composited ove
 link reads as the business rather than as an anonymous lawn. Every page points at it via `og:image`
 and `twitter:image`.
 
-Rebuild it after changing the hero photo (edit `PHOTO` at the top of the script first):
+Rebuild it after changing the hero photo — edit `PHOTO` at the top of the script, and `CROP_Y` if
+you want the crop biased above or below centre (the script cover-scales any aspect ratio, so a
+square source works fine):
 
 ```bash
 python3 tools/make-og-image.py
