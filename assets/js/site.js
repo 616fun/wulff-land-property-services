@@ -4,6 +4,14 @@
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
+  /* The drawer and the lightbox can both be open at once. Track who wants the
+     page held still so closing one doesn't unlock scrolling for the other. */
+  var scrollLocks = {};
+  var setScrollLock = function (owner, on) {
+    if (on) scrollLocks[owner] = 1; else delete scrollLocks[owner];
+    document.body.style.overflow = Object.keys(scrollLocks).length ? 'hidden' : '';
+  };
+
   /* ---------- year ---------- */
   var yr = $('#yr'); if (yr) yr.textContent = new Date().getFullYear();
 
@@ -22,7 +30,7 @@
       burger.setAttribute('aria-expanded', String(open));
       burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
       drawer.classList.toggle('is-open', open);
-      document.body.style.overflow = open ? 'hidden' : '';
+      setScrollLock('drawer', open);
     };
     burger.addEventListener('click', function () {
       setMenu(burger.getAttribute('aria-expanded') !== 'true');
@@ -70,7 +78,7 @@
 
   /* ---------- lightbox ---------- */
   var lb = $('#lb'), lbImg = $('#lbImg'), lbCount = $('#lbCount');
-  var idx = -1, lastFocus = null;
+  var idx = -1, lastFocus = null, closeTimer = null;
   var visible = function () { return $$('.shot').filter(function (s) { return !s.hidden; }); };
 
   var show = function (i) {
@@ -84,18 +92,25 @@
   };
   var open = function (i, from) {
     if (!lb) return;
+    // a close is animating out — cancel its teardown or it will blank this one
+    if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
     lastFocus = from || document.activeElement;
     lb.hidden = false;
     requestAnimationFrame(function () { lb.classList.add('is-open'); });
-    document.body.style.overflow = 'hidden';
+    setScrollLock('lightbox', true);
     show(i);
     $('#lbClose').focus();
   };
   var close = function () {
     if (!lb) return;
     lb.classList.remove('is-open');
-    document.body.style.overflow = '';
-    setTimeout(function () { lb.hidden = true; lbImg.src = ''; }, 280);
+    setScrollLock('lightbox', false);
+    if (closeTimer) clearTimeout(closeTimer);
+    closeTimer = setTimeout(function () {
+      closeTimer = null;
+      lb.hidden = true;
+      lbImg.removeAttribute('src');
+    }, 280);
     if (lastFocus) lastFocus.focus();
   };
 
@@ -128,15 +143,33 @@
     }, { passive: true });
   }
 
-  /* ---------- quote form ----------
-     Works with no backend: falls back to a pre-filled email.
-     To collect submissions properly, put a Formspree (or similar) URL in
-     the form's data-endpoint attribute in contact.html.                */
+  /* ---------- estimate form ----------
+     With a backend (put a Formspree-style URL in the form's data-endpoint
+     attribute) the request is posted and confirmed in place.
+
+     Without one there is nothing to post to, so we must not pretend the
+     request was sent. A bare `location.href = "mailto:"` fails silently on
+     any device with no mail handler configured — the visitor sees nothing
+     happen and the lead is lost without anyone knowing. Instead we hand
+     back the finished message and three ways to send it. */
   var form = $('#quoteForm'), note = $('#formNote');
+
+  var esc = function (s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  };
+
+  var panel = function (html) {
+    form.innerHTML = '<div class="sent">' + html + '</div>';
+    form.querySelector('.sent').scrollIntoView({ block: 'center', behavior: 'smooth' });
+  };
+
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (form.querySelector('[name="_gotcha"]').value) return; // honeypot
+
       var data = {};
       new FormData(form).forEach(function (v, k) { if (k[0] !== '_') data[k] = v; });
       var btn = form.querySelector('button[type="submit"]');
@@ -149,28 +182,59 @@
         'City: ' + (data.city || '') + '\n' +
         'Service: ' + (data.service || '') + '\n\n' +
         (data.message || '');
+      var subject = 'Estimate request — ' + (data.name || 'Website');
 
+      /* ---- no backend: give the visitor a way that actually works ---- */
       if (!endpoint) {
-        window.location.href = 'mailto:Wulfflandservices@gmail.com'
-          + '?subject=' + encodeURIComponent('Quote request — ' + (data.name || 'Website'))
-          + '&body=' + encodeURIComponent(body);
-        if (note) note.textContent = 'Opening your email application with the details filled in…';
+        var mail = 'mailto:Wulfflandservices@gmail.com?subject=' + encodeURIComponent(subject)
+                 + '&body=' + encodeURIComponent(body);
+        var sms  = 'sms:+17653935386?&body=' + encodeURIComponent(body);
+        var touch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
+        // whichever channel fits the device leads; the other is secondary
+        var mk = function (href, label, primary) {
+          return '<a class="btn ' + (primary ? '' : 'btn--ghost ') + 'btn--block" href="' + href + '">' + label + '</a>';
+        };
+        var textBtn = mk(sms, 'Send as a text message', touch);
+        var mailBtn = mk(mail, 'Send as an email', !touch);
+
+        panel(
+          '<h3>One more step</h3>' +
+          '<p class="muted">Your request is written out below but has not been sent yet. ' +
+          'Choose how you would like it to reach us — or just call.</p>' +
+          '<div class="sent__actions">' +
+            (touch ? textBtn + mailBtn : mailBtn + textBtn) +
+            '<a class="btn btn--ghost btn--block" href="tel:+17653935386">Call (765) 393-5386</a>' +
+          '</div>' +
+          '<label class="sent__label" for="sentBody">Your request</label>' +
+          '<textarea id="sentBody" class="sent__body" readonly rows="8">' + esc(body) + '</textarea>' +
+          '<button type="button" class="btn btn--ghost btn--block" id="copyBtn">Copy these details</button>'
+        );
+
+        var copy = $('#copyBtn');
+        copy.addEventListener('click', function () {
+          var ta = $('#sentBody');
+          ta.select(); ta.setSelectionRange(0, 99999);
+          var done = function () { copy.textContent = 'Copied'; setTimeout(function () { copy.textContent = 'Copy these details'; }, 2000); };
+          if (navigator.clipboard) { navigator.clipboard.writeText(ta.value).then(done, done); }
+          else { try { document.execCommand('copy'); done(); } catch (err) { copy.textContent = 'Press Ctrl/Cmd + C'; } }
+        });
         return;
       }
 
+      /* ---- backend configured ---- */
       btn.disabled = true; btn.textContent = 'Sending…';
       fetch(endpoint, {
         method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form)
       }).then(function (r) {
         if (!r.ok) throw new Error('bad response');
-        form.innerHTML = '<div style="text-align:center;padding:40px 0">'
-          + '<h3 style="margin-bottom:12px">Request received.</h3>'
+        panel('<h3>Request received.</h3>'
           + '<p class="muted">Thank you — we\'ll be in touch shortly, typically the same day. '
-          + 'For anything urgent, call <a href="tel:+17653935386" style="color:var(--steel-lt)">(765) 393-5386</a>.</p></div>';
+          + 'For anything urgent, call <a href="tel:+17653935386">(765) 393-5386</a>.</p>');
       }).catch(function () {
-        btn.disabled = false; btn.textContent = 'Send my request';
+        btn.disabled = false; btn.textContent = 'Submit request';
         if (note) note.innerHTML = 'The request could not be sent. Please call or text '
-          + '<a href="tel:+17653935386" style="color:var(--steel-lt)">(765) 393-5386</a>.';
+          + '<a href="tel:+17653935386">(765) 393-5386</a>.';
       });
     });
   }

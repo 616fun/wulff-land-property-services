@@ -57,19 +57,30 @@ brick red, bone white — so the site and the truck decals/business cards read a
 - Images resized and compressed; below-the-fold images lazy-load
 - Degrades gracefully with JavaScript disabled
 
-## The quote form
+## The estimate form
 
-Out of the box the form opens the visitor's email app with everything pre-filled — so it works
-immediately with no server.
+**Read this before Logan starts advertising the site.**
 
-To collect submissions properly instead (recommended), create a free form endpoint at
-[formspree.io](https://formspree.io) and paste the URL into `contact.html`:
+Right now the form has no backend, so submitting it does **not** email anyone. Instead it hands the
+visitor their finished message and three ways to send it: as a text, as an email, or by calling. That
+is deliberate — the previous behaviour tried to open the visitor's mail app silently, which does
+nothing at all on a device with no mail handler configured. The visitor would think they had sent a
+request and Logan would never know it existed.
+
+The current flow always gives the visitor a working path, but it still depends on them taking a
+second action. **Wiring a real endpoint is the single highest-value improvement left on this site.**
+
+To do it, create a free form endpoint at [formspree.io](https://formspree.io) and paste the URL into
+`contact.html`:
 
 ```html
-<form class="form" id="quoteForm" method="post" data-endpoint="https://formspree.io/f/YOUR_ID">
+<form class="form" id="quoteForm" method="post" data-endpoint="https://formspree.io/f/YOUR_ID"
 ```
 
-Submissions will then land in the inbox, and the page shows a confirmation without navigating away.
+The moment that attribute is non-empty the JavaScript posts the request, submissions land in the
+inbox, and the visitor sees "Request received." without leaving the page. No other change is needed.
+
+With JavaScript disabled the form falls back to its `action="mailto:..."` target.
 
 ## Editing
 

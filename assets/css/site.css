@@ -676,3 +676,19 @@ p:last-child{margin-bottom:0}
   .phero__grid{grid-template-columns:1fr;gap:30px}
   .phero__photo img{aspect-ratio:4/3;object-fit:cover;object-position:center 42%}
 }
+
+/* ---------- estimate form: post-submit panel ---------- */
+.sent{display:grid;gap:16px;padding:30px 26px;background:var(--ink-2);border:1px solid var(--line-2);border-radius:var(--r-lg)}
+.sent h3{font-size:24px;margin:0}
+.sent p{margin:0;font-size:15.5px}
+.sent a{color:var(--steel-lt)}
+.sent__actions{display:grid;gap:10px;margin-top:4px}
+.sent__actions .btn{color:#fff}
+.sent__actions .btn--ghost{color:var(--bone)}
+.sent__label{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--steel-lt);margin-top:6px}
+.sent__body{
+  font-family:var(--body);font-size:14.5px;line-height:1.6;color:#C9D2DC;
+  background:var(--ink);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px 16px;width:100%;resize:vertical;
+}
+.sent__body:focus{outline:none;border-color:var(--steel)}
