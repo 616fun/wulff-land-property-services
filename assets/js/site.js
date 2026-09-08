@@ -223,6 +223,12 @@
       }
 
       /* ---- backend configured ---- */
+      // Formspree reads these: _subject titles the notification email, and the
+      // field named "email" becomes the reply-to, so hitting Reply in the inbox
+      // answers the customer directly.
+      var subj = form.querySelector('[name="_subject"]');
+      if (subj) subj.value = subject + (data.city ? ' (' + data.city + ')' : '');
+
       btn.disabled = true; btn.textContent = 'Sending…';
       fetch(endpoint, {
         method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form)

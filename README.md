@@ -59,28 +59,31 @@ brick red, bone white — so the site and the truck decals/business cards read a
 
 ## The estimate form
 
-**Read this before Logan starts advertising the site.**
+The form posts to Formspree at `https://formspree.io/f/mdeowjpj`, set on the `data-endpoint`
+attribute of the form in `contact.html`. Submissions arrive as email; the visitor sees
+"Request received." without leaving the page.
 
-Right now the form has no backend, so submitting it does **not** email anyone. Instead it hands the
-visitor their finished message and three ways to send it: as a text, as an email, or by calling. That
-is deliberate — the previous behaviour tried to open the visitor's mail app silently, which does
-nothing at all on a device with no mail handler configured. The visitor would think they had sent a
-request and Logan would never know it existed.
+Two fields do work behind the scenes:
 
-The current flow always gives the visitor a working path, but it still depends on them taking a
-second action. **Wiring a real endpoint is the single highest-value improvement left on this site.**
+- `_subject` is set in JavaScript to `Estimate request — <name> (<city>)`, so the inbox is scannable
+  without opening anything.
+- The field named `email` is what Formspree uses as reply-to, so hitting Reply answers the customer
+  directly.
+- `_gotcha` is a hidden honeypot. Bots fill it in; the handler drops those submissions silently.
 
-To do it, create a free form endpoint at [formspree.io](https://formspree.io) and paste the URL into
-`contact.html`:
+**If the endpoint is ever removed or the Formspree account lapses**, `data-endpoint` goes back to
+empty and the form falls back to handing the visitor their composed message with three ways to send
+it (text, email, call). It never claims a request was sent when it wasn't.
+
+With JavaScript disabled the form falls back to its `action="mailto:..."` target.
+
+To change the endpoint, edit that one attribute:
 
 ```html
 <form class="form" id="quoteForm" method="post" data-endpoint="https://formspree.io/f/YOUR_ID"
 ```
 
-The moment that attribute is non-empty the JavaScript posts the request, submissions land in the
-inbox, and the visitor sees "Request received." without leaving the page. No other change is needed.
-
-With JavaScript disabled the form falls back to its `action="mailto:..."` target.
+Then re-stamp the asset versions (see below).
 
 ## Editing
 

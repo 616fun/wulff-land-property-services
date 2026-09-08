@@ -68,7 +68,7 @@
     <div class="r">
       <h2 style="margin-bottom:10px">Request an estimate</h2>
       <p class="muted" style="margin-bottom:30px">There is no cost or obligation. We assess every property in person before quoting.</p>
-      <form class="form" id="quoteForm" method="post" data-endpoint=""
+      <form class="form" id="quoteForm" method="post" data-endpoint="https://formspree.io/f/mdeowjpj"
             action="mailto:Wulfflandservices@gmail.com" enctype="text/plain">
         <div class="field--2">
           <div class="field"><label for="name">Name <span class="req">*</span></label>
@@ -91,6 +91,7 @@
         <div class="field"><label for="message">Details</label>
           <textarea id="message" name="message" placeholder="Approximate property size, the work you&rsquo;d like done, and any timing considerations."></textarea></div>
         <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="_subject" value="New estimate request">
         <button class="btn btn--lg btn--block" type="submit">Submit request</button>
         <p class="form__note" id="formNote">Prefer to speak with someone? Call or text (765) 393-5386.</p>
       </form>
@@ -207,6 +208,6 @@
   <button class="lb__nav lb__nav--next" id="lbNext" aria-label="Next">&#8250;</button>
   <span class="lb__count" id="lbCount"></span>
 </div>
-<script src="assets/js/site.js?v=535081de8a"></script>
+<script src="assets/js/site.js?v=f74ebee71d"></script>
 </body>
 </html>
