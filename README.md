@@ -63,6 +63,10 @@ The form posts to Formspree at `https://formspree.io/f/mdeowjpj`, set on the `da
 attribute of the form in `contact.html`. Submissions arrive as email; the visitor sees
 "Request received." without leaving the page.
 
+> **The recipient address is not in this repo.** It is configured against the form ID in the
+> Formspree account, so no code change can redirect it. It currently delivers to Brian rather than
+> Logan — see [BACKLOG.md](BACKLOG.md).
+
 Two fields do work behind the scenes:
 
 - `_subject` is set in JavaScript to `Estimate request — <name> (<city>)`, so the inbox is scannable
@@ -114,18 +118,10 @@ these rules so the site stays consistent:
   properties or 41 customers; the review section says *three* Google reviews on its face. Obvious
   honesty is an asset for a new local business — inflated numbers are the fastest way to lose it.
 
-## Recommended next steps
+## Open work
 
-1. **Buy a domain** (~$12/yr) — `wulfflandservices.com` reads far better than a `github.io` URL on a
-   truck door or a business card. Add it under Settings → Pages → Custom domain.
-2. **Add a daytime photo of Logan working.** The About page currently uses the only available photo of
-   him (taken at night). A clear daytime shot — on a mower, or standing by a finished bed — is the
-   single highest-impact image change on the site.
-3. **Keep asking for Google reviews.** Three is a good start; ten makes the map listing competitive.
-   The "Read & leave a review on Google" button is on every page.
-4. **Add real before/after pairs.** The gallery photos came from the old site with no pairing
-   information. Shooting matched before/after sets is the most persuasive content this business can make.
-5. **Post prices or starting rates** if Logan is comfortable — it filters out bad-fit leads.
+Outstanding items live in [BACKLOG.md](BACKLOG.md) — including one blocking item: the estimate form
+currently delivers to the wrong inbox.
 
 ## Link previews
 
