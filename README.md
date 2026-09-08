@@ -148,6 +148,18 @@ The Home and Services pages use residential photographs only. Commercial and lar
 the gallery, where it belongs — the pages a prospective homeowner lands on should show properties
 that look like theirs.
 
+## After editing CSS or JS
+
+GitHub Pages caches assets for about ten minutes, so a returning visitor can run stale JavaScript
+against fresh HTML. The `<link>` and `<script>` tags carry a content hash for that reason. Re-stamp
+it whenever you change `assets/css/site.css` or `assets/js/site.js`:
+
+```bash
+python3 tools/version-assets.py
+```
+
+The hash changes only when the file does, so unchanged assets stay cached.
+
 ## Customer privacy — image metadata
 
 Phone photos embed GPS coordinates in EXIF. Publishing those would expose the exact
